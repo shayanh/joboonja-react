@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import NavBar from './common/NavBar';
-import BlueBar from './common/BlueBar'
 import Footer from "./common/Footer";
 import Profile from "./profile/Profile";
 import {ToastContainer} from "react-toastify";
@@ -19,9 +18,8 @@ class App extends Component {
             <div className="App">
                 <ToastContainer/>
                 <NavBar/>
-                <BlueBar/>
 
-                <Route path='/users/:id' render={(props) => <Profile {...props} loggedInUser={1}/>} />
+                <Route path='/users/:id' render={(props) => <Profile {...props} loggedInUser={"1"}/>} />
 
                 <Footer/>
             </div>

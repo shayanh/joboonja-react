@@ -1,8 +1,10 @@
 import React from "react";
-import axious from 'axios';
+import axios from 'axios';
 import './Profile.css';
 import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import SkillsList from "../common/SkillsList";
+import BlueBar from "../common/BlueBar";
 
 function ProfilePicture(props) {
     return (
@@ -57,13 +59,13 @@ class AddNewSkill extends React.Component {
     }
 
     componentDidMount() {
-        axious.get('http://localhost:8080/skill-names').then(res => {
+        axios.get('http://localhost:8080/skill-names').then(res => {
             const skills = res.data;
             this.setState({
                 skills: skills,
             });
         }).catch(err => {
-            toast.error("Cannot get skills list: " + err.toString());
+            toast.error("Cannot get skills list: " + err.message);
         });
     }
 
@@ -78,12 +80,12 @@ class AddNewSkill extends React.Component {
         const newSkill = {
             skillName: this.state.selectedSkill
         };
-        console.log(this.props.user);
-        axious.post("http://localhost:8080/users/" + this.props.user + "/skills", newSkill).then(() => {
+        // console.log(this.props.user);
+        axios.post("http://localhost:8080/users/" + this.props.user + "/skills", newSkill).then(() => {
             toast.success("Successfully added");
             this.props.updater();
         }).catch(err => {
-            toast.error("Cannot add skill: " + err.toString())
+            toast.error("Cannot add skill: " + err.message)
         })
     }
 
@@ -105,56 +107,44 @@ class AddNewSkill extends React.Component {
     }
 }
 
-function Skill(props) {
-   return (
-        <div className="skill-individual rounded">
-            <span className="skill-text text-center">{props.skill.name.name}</span>
-            <button className={"point-box " + props.cssClass} value={props.skill.name.name} onClick={props.onClickFn}><span>{props.skill.point}</span></button>
-        </div>
-   );
-}
-
-function SkillsList(props) {
-    const skills = props.skills || [];
-    console.log(skills);
-    return (
-        <div className="col-md-12">
-            <div className="skills">
-                {skills.map((skill, i) => (
-                    <Skill key={i} skill={skill} onClickFn={props.onClickFn} cssClass={props.cssClass}/>
-                ))}
-            </div>
-        </div>
-    );
-}
-
 class Profile extends React.Component {
     constructor(props) {
         super(props);
-        console.log(props);
+        // console.log(props);
         this.state = {
             profileData: {},
             hasError: false,
         };
         this.deleteSkill = this.deleteSkill.bind(this);
         this.updateSkills = this.updateSkills.bind(this);
+        this.endorseSkill = this.endorseSkill.bind(this);
     }
 
     deleteSkill(event) {
         const userID = this.props.match.params.id;
         const skillName = event.target.value;
-        axious.delete("http://localhost:8080/users/" + userID + "/skills?skill-name=" + skillName).then(() => {
+        axios.delete("http://localhost:8080/users/" + userID + "/skills?skill-name=" + encodeURIComponent(skillName)).then(() => {
             toast.info(skillName + " skill deleted");
             this.updateSkills()
         }).catch(err => {
-            toast.error("Cannot delete skill: " + err.toString())
+            toast.error("Cannot delete skill: " + err.message)
+        })
+    }
+
+    endorseSkill(event) {
+        const userID = this.props.match.params.id;
+        const skillName = event.target.value;
+        axios.post("http://localhost:8080/users/" + userID + "/skills/endorsements?skill-name=" + encodeURIComponent(skillName)).then(() => {
+            this.updateSkills();
+        }).catch(err => {
+            toast.error("Cannot endorse skill:" + err.message)
         })
     }
 
     updateSkills() {
         const userID = this.props.match.params.id;
         const profileData = Object.assign({}, this.state.profileData);
-        axious.get('http://localhost:8080/users/' + userID + "/skills").then(res => {
+        axios.get('http://localhost:8080/users/' + userID + "/skills").then(res => {
             profileData.skills = res.data;
             this.setState({
                 profileData: profileData,
@@ -164,9 +154,9 @@ class Profile extends React.Component {
 
     componentDidMount() {
         const userID = this.props.match.params.id;
-        axious.get('http://localhost:8080/users/' + userID).then(res => {
+        axios.get('http://localhost:8080/users/' + userID).then(res => {
             const profileData = res.data;
-            console.log(profileData);
+            // console.log(profileData);
             this.setState({
                 profileData: profileData,
             })
@@ -174,39 +164,60 @@ class Profile extends React.Component {
             this.setState({
                 hasError: true,
             });
-            toast.error(err.toString());
+            toast.error(err.message);
         })
     }
 
     render() {
+        const userID = this.props.match.params.id;
+        const loggedInUser = this.props.loggedInUser;
+        const selfProfile = userID === loggedInUser;
+
+        let addNewSkill;
+        if (selfProfile) {
+            addNewSkill = (
+                <div className="row">
+                    <div className="col-md-8">
+                        <AddNewSkill user={userID} updater={this.updateSkills}/>
+                    </div>
+                </div>
+            )
+        }
+
         const defaultHTML = (
-            <div className="container-fluid" id="main">
-                <div className="container">
-                    <div className="row">
-                        <ProfilePicture pictureURL={this.state.profileData["profilePictureURL"]}/>
-                        <UserDetails firstName={this.state.profileData["firstName"]}
-                                     lastName={this.state.profileData["lastName"]}
-                                     jobTitle={this.state.profileData["jobTitle"]}/>
-                    </div>
-                    <div className="row" id="main-text-col">
-                        <div className="col-lg-12 text-right">
-                            <Bio bio={this.state.profileData["bio"]}/>
+            <div>
+                <BlueBar/>
+                <div className="container-fluid" id="main">
+                    <div className="container">
+                        <div className="row">
+                            <ProfilePicture pictureURL={this.state.profileData["profilePictureURL"]}/>
+                            <UserDetails firstName={this.state.profileData["firstName"]}
+                                         lastName={this.state.profileData["lastName"]}
+                                         jobTitle={this.state.profileData["jobTitle"]}/>
                         </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-md-8">
-                            <AddNewSkill user={this.props.loggedInUser} updater={this.updateSkills}/>
+                        <div className="row" id="main-text-col">
+                            <div className="col-lg-12 text-right">
+                                <Bio bio={this.state.profileData["bio"]}/>
+                            </div>
                         </div>
-                    </div>
-                    <div className="row" id="skills-row">
-                        <SkillsList skills={this.state.profileData["skills"]} onClickFn={this.deleteSkill} cssClass="deletable" />
+                        {addNewSkill}
+                        <div className="row" id="skills-row">
+                            <SkillsList skills={this.state.profileData["skills"]}
+                                        onClickFn={selfProfile ? this.deleteSkill : this.endorseSkill}
+                                        cssClass={selfProfile ? "deletable" : "endorsable"} />
+                        </div>
                     </div>
                 </div>
             </div>
         );
 
         if (this.state.hasError) {
-            return <div className="container-fluid" id="main"/>;
+            return (
+                <div>
+                    <BlueBar/>
+                    <div className="container-fluid" id="main"/>
+                </div>
+            );
         } else {
             return defaultHTML;
         }
