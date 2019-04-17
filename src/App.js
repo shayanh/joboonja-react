@@ -1,28 +1,32 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {Component} from 'react';
+import NavBar from './common/NavBar';
+import BlueBar from './common/BlueBar'
+import Footer from "./common/Footer";
+import Profile from "./profile/Profile";
+import {ToastContainer} from "react-toastify";
+import {Route} from "react-router-dom";
 
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
+    constructor(props) {
+        super(props);
+        this.state = {
+            loggedInUser: 1,
+        }
+    }
+
+    render() {
+        return (
+            <div className="App">
+                <ToastContainer/>
+                <NavBar/>
+                <BlueBar/>
+
+                <Route path='/users/:id' render={(props) => <Profile {...props} loggedInUser={1}/>} />
+
+                <Footer/>
+            </div>
+        );
+    }
 }
 
 export default App;
