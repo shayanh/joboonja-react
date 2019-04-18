@@ -1,0 +1,151 @@
+#main-project {
+    background-color: #f6f6f6;
+    min-height: calc(100vh - 14rem - 4rem + 75px);
+    padding-bottom: 25px;
+}
+
+#project-box {
+    background-color: #ffffff;
+    border-radius: 4px;
+    box-shadow: 0 0 4px #d1d1d1;
+    margin-top: -75px;
+    text-align: right;
+    position: relative;
+}
+
+.info-box {
+    border-bottom: 2px dashed #66dfe7;
+    height: 100%;
+    border-radius: 4px;
+}
+
+.info-box-inside {
+    text-align: right;
+    padding: 40px 0 40px 40px;
+    font-size: 24px;
+    display: flex;
+    flex-direction: column;
+}
+
+.project-picture {
+    width: 270px;
+    /*height: 270px;*/
+    margin: 50px;
+}
+
+.project-picture-container {
+    padding: 50px;
+    justify-content: start;
+}
+
+.description {
+    margin-top: 20px;
+    text-indent: 24px;
+    font-size: 16px;
+    text-align: justify;
+}
+
+.title {
+    text-align: right;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.description-starter {
+    margin-top: 15px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.deadline {
+    color: #6c6c6c;
+    margin-top: 15px;
+}
+
+.deadline-finished {
+    color: #f0222e;
+}
+
+.winner {
+    color: #059142;
+    margin-bottom: 10px;
+}
+
+.budget {
+    color: #00858d;
+    direction: rtl;
+}
+
+.icon-text {
+    font-weight: bold;
+    font-size: 14px;
+    display: inline-block;
+    top: 15%;
+    -ms-transform: translateY(-15%);
+    transform: translateY(-15%);
+}
+
+.skills-box {
+    background-color: #f9f9f9;
+    border-bottom: 2px solid #e2e2e2;
+    padding: 24px 40px;
+}
+
+.skills-title {
+    color: #00858d;
+    font-weight: bold;
+    font-size: 18px;
+    margin-left: 24px;
+    margin-bottom: 12px;
+}
+
+.bid-box {
+    padding: 24px 40px;
+    direction: rtl;
+    align-items: center;
+    font-size: 16px;
+}
+
+.bidding-finished {
+    color: #f0222e;
+}
+
+.bid-title {
+    font-weight: bold;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+#toman {
+    color: #0199A5;
+    float: left;
+}
+
+.already-bid {
+    color: #059142;
+}
+
+.bid-text-box {
+    border: none;
+    color: #0199A5;
+    outline-width: 0;
+}
+
+.bid-input {
+    box-shadow: 0 0 0 2px #0199A5;
+    border-radius: 4px;
+    padding: 5px;
+    display: inline-block;
+}
+
+.bid-button {
+    padding: 6px;
+    background-color: #0199A5;
+    color: #FFFFFF;
+    font-size: 16px;
+    border-radius: 6px;
+    border: none;
+    box-shadow: 0 0 0 1px #0199A5;
+    display: inline-block;
+    margin-right: 10px;
+}

@@ -7,16 +7,16 @@ function NavBar(props) {
         <nav className="navbar navbar-expand-md bg-white navbar-light fixed-top">
             <div className="container">
                 <div className="nav navbar-nav">
-                    <a className="navbar-brand" href="#">
+                    <div className="navbar-brand">
                         <img src={logo} alt="Joboonja"/>
-                    </a>
+                    </div>
                 </div>
                 <ul className="nav navbar-nav">
                     <li className="nav-item active">
-                        <a className="nav-link" href="#">حساب کاربری</a>
+                        <div className="nav-link">حساب کاربری</div>
                     </li>
                     <li className="nav-item active">
-                        <a className="nav-link" href="#">خروج</a>
+                        <div className="nav-link">خروج</div>
                     </li>
                 </ul>
             </div>

@@ -187,7 +187,7 @@ class Profile extends React.Component {
         const defaultHTML = (
             <div>
                 <BlueBar/>
-                <div className="container-fluid" id="main">
+                <div className="container-fluid" id="main-profile">
                     <div className="container">
                         <div className="row">
                             <ProfilePicture pictureURL={this.state.profileData["profilePictureURL"]}/>
@@ -201,10 +201,12 @@ class Profile extends React.Component {
                             </div>
                         </div>
                         {addNewSkill}
-                        <div className="row" id="skills-row">
-                            <SkillsList skills={this.state.profileData["skills"]}
-                                        onClickFn={selfProfile ? this.deleteSkill : this.endorseSkill}
-                                        cssClass={selfProfile ? "deletable" : "endorsable"} />
+                        <div className="row">
+                            <div className="col-md-12">
+                                <SkillsList skills={this.state.profileData["skills"]}
+                                            onClickFn={selfProfile ? this.deleteSkill : this.endorseSkill}
+                                            cssClass={selfProfile ? "deletable" : "endorsable"} />
+                            </div>
                         </div>
                     </div>
                 </div>

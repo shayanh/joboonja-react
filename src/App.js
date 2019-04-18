@@ -4,6 +4,7 @@ import Footer from "./common/Footer";
 import Profile from "./profile/Profile";
 import {ToastContainer} from "react-toastify";
 import {Route} from "react-router-dom";
+import Project from "./project/Project";
 
 class App extends Component {
     constructor(props) {
@@ -20,6 +21,7 @@ class App extends Component {
                 <NavBar/>
 
                 <Route path='/users/:id' render={(props) => <Profile {...props} loggedInUser={"1"}/>} />
+                <Route path='/projects/:id' render={(props) => <Project {...props} loggedInUser={"1"}/>} />
 
                 <Footer/>
             </div>

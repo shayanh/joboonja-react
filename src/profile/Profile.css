@@ -1,6 +1,7 @@
-#main {
+#main-profile {
     background-color: #f6f6f6;
     min-height: calc(100vh - 14rem - 4rem);
+    padding-bottom: 25px;
 }
 
 #profile-pic {
@@ -62,13 +63,9 @@
     text-align: justify;
 }
 
-#skills-row {
-    /*margin-top: 20px;*/
-}
-
 .add-new-skill-box {
     display: flex;
-    justify-content: start;
+    /*justify-content: start;*/
     direction: rtl;
     margin-bottom: 20px;
     align-items: center;
