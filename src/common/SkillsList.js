@@ -21,10 +21,14 @@ function Button(props) {
 }
 
 function Skill(props) {
+    let cssClass = props.cssClass;
+    if (props.skill.isEndorsed) {
+        cssClass = cssClass + " endorsed";
+    }
    return (
         <div className="skill-individual rounded">
             <span className="skill-text text-center">{props.skill.name.name}</span>
-            <Button skill={props.skill} cssClass={props.cssClass} onClickFn={props.onClickFn} disabled={props.disabled}/>
+            <Button skill={props.skill} cssClass={cssClass} onClickFn={props.onClickFn} disabled={props.disabled}/>
         </div>
    );
 }
