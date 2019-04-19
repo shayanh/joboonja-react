@@ -175,7 +175,12 @@
     margin-right: 5px;
 }
 
-.disabled-project {
-    pointer-events: none;
-    opacity: 0.5;
+.home-project-time-remaining.finished {
+    background-color: #3d8788;
+    color: white
+}
+
+.home-project-card.disabled-project {
+    /*pointer-events: none;*/
+    opacity: 0.7;
 }

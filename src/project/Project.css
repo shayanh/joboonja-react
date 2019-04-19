@@ -21,7 +21,7 @@
 
 .info-box-inside {
     text-align: right;
-    padding: 40px 0 40px 40px;
+    padding: 40px 50px 40px 40px;
     font-size: 24px;
     display: flex;
     flex-direction: column;
@@ -30,7 +30,9 @@
 .project-picture {
     width: 270px;
     /*height: 270px;*/
-    margin: 50px;
+    margin-right: 50px;
+    margin-top: 50px;
+    margin-bottom: 50px;
 }
 
 .project-picture-container {

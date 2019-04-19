@@ -4,6 +4,7 @@ import BlueBar from "../common/BlueBar";
 import './Home.css';
 import {toast} from 'react-toastify';
 import {Link} from "react-router-dom";
+import {getRemainingTime} from "../common/utils";
 
 function JobOonjaTitle(props) {
     return (
@@ -83,35 +84,73 @@ function SmallSkillsList(props) {
     )
 }
 
-function ProjectCard(props) {
-    const project = props.project;
-    return (
-        <div className="home-project-card">
-            <img className="home-project-img border" src={project.imageUrl} alt="project" />
-            <div>
-                <div className="home-project-firstrow">
-                    <Link to={'/projects/' + project.id} className="home-project-title text-right">
-                        {project.title}
-                    </Link>
-                    <div className="home-project-time-remaining text-center">
-                        {/*// TODO*/}
-                        زمان باقیمانده: ۱۷:۲۵
+class ProjectCard extends React.Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+            duration: new Date(0),
+        };
+        this.updateDuration = this.updateDuration.bind(this);
+    }
+
+    updateDuration() {
+        this.setState({
+            duration: new Date(this.props.project.deadline - Date.now()),
+        })
+    }
+
+    componentDidMount() {
+        const interval = setInterval(this.updateDuration, 1000);
+    }
+
+    render() {
+        const project = this.props.project;
+        const finished = Date.now() > project.deadline;
+
+        let timeBadge;
+        let projectClass;
+        if (finished) {
+            projectClass = "disabled-project";
+            timeBadge = (
+                <div className="home-project-time-remaining finished text-center">
+                    مهلت تمام شده
+                </div>
+            );
+        } else {
+            timeBadge = (
+                <div className="home-project-time-remaining text-center">
+                    زمان باقیمانده:
+                    &nbsp;
+                    {getRemainingTime(this.state.duration)}
+                </div>
+            );
+        }
+
+        return (
+            <div className={"home-project-card " + projectClass}>
+                <img className="home-project-img border" src={project.imageUrl} alt="project"/>
+                <div>
+                    <div className="home-project-firstrow">
+                        <Link to={'/projects/' + project.id} className="home-project-title text-right">
+                            {project.title}
+                        </Link>
+                        {timeBadge}
                     </div>
+                    <div className="home-project-desc text-right">
+                        {project.description}
+                    </div>
+                    <div className="home-project-budget text-right">
+                        بودجه:
+                        &nbsp;
+                        {project.budget}
+                        &nbsp;
+                        تومان
+                    </div>
+                    <SmallSkillsList skills={project.skills}/>
                 </div>
-                <div className="home-project-desc text-right">
-                    {project.description}
-                </div>
-                <div className="home-project-budget text-right">
-                    بودجه:
-                    &nbsp;
-                    {project.budget}
-                    &nbsp;
-                    تومان
-                </div>
-                <SmallSkillsList skills={project.skills}/>
             </div>
-        </div>
-    );
+        );
+    }
 }
 
 function ProjectsList(props) {

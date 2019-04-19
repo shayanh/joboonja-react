@@ -4,7 +4,7 @@ import {toast} from 'react-toastify';
 import BlueBar from "../common/BlueBar";
 import "./Project.css";
 import SkillsList from "../common/SkillsList";
-import getRemainingTime from "../common/utils";
+import {getRemainingTimeVerbose} from "../common/utils";
 
 function ProjectDetails(props) {
     let deadline;
@@ -23,7 +23,7 @@ function ProjectDetails(props) {
                     زمان باقی‌مانده:
                     &nbsp;
                     <span className="my-not-bold">
-                    {getRemainingTime(props.duration)}
+                    {getRemainingTimeVerbose(props.duration)}
                     </span>
                 </span>
             </div>
@@ -173,8 +173,16 @@ class Project extends React.Component {
             projectData: {},
             hasError: false,
             bidBefore: false,
+            duration: new Date(0),
         };
         this.updateBidDetails = this.updateBidDetails.bind(this);
+        this.updateDuration = this.updateDuration.bind(this);
+    }
+
+    updateDuration() {
+        this.setState({
+            duration: new Date(this.state.projectData.deadline - Date.now()),
+        })
     }
 
     componentDidMount() {
@@ -184,7 +192,8 @@ class Project extends React.Component {
             // console.log(projectData);
             this.setState({
                 projectData: projectData,
-            })
+            });
+            const interval = setInterval(this.updateDuration, 1000);
         }).catch(err => {
             this.setState({
                 hasError: true,
@@ -207,12 +216,7 @@ class Project extends React.Component {
     render() {
         const projectID = this.props.match.params.id;
         const loggedInUser = this.props.loggedInUser;
-        const deadline = 1655537257000;
-        const finished = Date.now() > deadline; // TODO
-        const duration = new Date(deadline - Date.now());
-        console.log("Month: " + duration.getMonth());
-        console.log("Day: " + duration.getDay());
-        console.log(duration.toString());
+        const finished = Date.now() > this.state.projectData.deadline;
 
         const defaultHTML = (
             <div>
@@ -222,7 +226,7 @@ class Project extends React.Component {
                         <div id="project-box">
                             <div className="row">
                                 <div className="col-lg-12">
-                                    <ProjectDetails data={this.state.projectData} finished={finished} duration={duration}/>
+                                    <ProjectDetails data={this.state.projectData} finished={finished} duration={this.state.duration}/>
                                 </div>
                             </div>
                             <div className="row">
