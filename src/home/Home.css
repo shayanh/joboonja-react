@@ -4,8 +4,11 @@
     padding-bottom: 25px;
 }
 
-#joboonja-title {
+.home-page-top {
     margin-top: -150px;
+}
+
+#joboonja-title {
     position: relative;
     color: #00858d;
     /*font-size: 40px;*/
@@ -15,6 +18,38 @@
     position: relative;
 }
 
-#searchDiv {
+#joboonja-search {
     position: relative;
+}
+
+.search-bar {
+    box-shadow: 0 3px 0 0 #00aebf;
+    border-radius: 0;
+    padding: 4px;
+    background-color: #d7f8fa;
+    display: inline-block;
+    width: 100%;
+}
+
+.search-input {
+    border: none;
+    background-color: #d7f8fa;
+    outline-width: 0;
+    width: calc(100% - 80px);
+    text-align: right;
+}
+
+.search-input::placeholder {
+    color: #6badaf;
+}
+
+.search-button {
+    padding: 6px;
+    background-color: #00aebf;
+    color: #FFFFFF;
+    font-size: 16px;
+    border-radius: 0;
+    border: none;
+    margin-right: 10px;
+    width: 70px;
 }

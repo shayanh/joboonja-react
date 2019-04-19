@@ -16,10 +16,11 @@ function JobOonjaTitle(props) {
     );
 }
 
-function SearchInput(props) {
+function JoboonjaSearch(props) {
     return (
-        <div id="searchDiv" className="text-center">
-            <input type="text" placeholder="جستجو در جاب‌اونجا"/>
+        <div id="joboonja-search" className="search-bar">
+            <input type="text" className="search-input" placeholder="جستجو در جاب‌اونجا"/>
+            <button className="search-button">جستجو</button>
         </div>
     );
 }
@@ -36,10 +37,18 @@ class Home extends React.Component {
                 <BlueBar/>
                 <div className="container-fluid" id="main-home">
                     <div className="container">
-                        <div className="row">
-                            <div className="col-sm-12">
-                                <JobOonjaTitle/>
-                                <SearchInput/>
+                        <div className="home-page-top">
+                            <div className="row">
+                                <div className="col-sm-12">
+                                    <JobOonjaTitle/>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-sm-3"/>
+                                <div className="col-6">
+                                    <JoboonjaSearch/>
+                                </div>
+                                <div className="col-sm-3"/>
                             </div>
                         </div>
                     </div>
