@@ -1,17 +1,17 @@
 #main-home {
     background-color: #f6f6f6;
-    min-height: calc(100vh - 14rem - 4rem);
+    min-height: calc(100vh - 14rem - 4rem + 150px);
     padding-bottom: 25px;
 }
 
 .home-page-top {
-    margin-top: -150px;
+    margin-top: -230px;
 }
 
 #joboonja-title {
     position: relative;
     color: #00858d;
-    /*font-size: 40px;*/
+    font-size: 32px;
 }
 
 #joboonja-desc {
@@ -19,6 +19,7 @@
 }
 
 #joboonja-search {
+    margin-top: 2rem;
     position: relative;
 }
 
