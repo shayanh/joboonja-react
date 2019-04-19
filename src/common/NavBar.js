@@ -1,23 +1,24 @@
 import './NavBar.css'
 import React from "react";
 import logo from '../logo_v1.png';
+import {Link} from "react-router-dom";
 
 function NavBar(props) {
     return (
         <nav className="navbar navbar-expand-md bg-white navbar-light fixed-top">
             <div className="container">
                 <div className="nav navbar-nav">
-                    <div className="navbar-brand">
+                    <Link to='/' className="navbar-brand">
                         <img src={logo} alt="Joboonja"/>
-                    </div>
+                    </Link>
                 </div>
                 <ul className="nav navbar-nav">
-                    <li className="nav-item active">
+                    <Link to={'/users/' + props.loggedInUser} className="nav-item active">
                         <div className="nav-link">حساب کاربری</div>
-                    </li>
-                    <li className="nav-item active">
+                    </Link>
+                    <Link to='#' className="nav-item active">
                         <div className="nav-link">خروج</div>
-                    </li>
+                    </Link>
                 </ul>
             </div>
         </nav>

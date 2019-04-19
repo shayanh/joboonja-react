@@ -6,6 +6,7 @@ import {ToastContainer} from "react-toastify";
 import {Route} from "react-router-dom";
 import Project from "./project/Project";
 import Home from "./home/Home";
+import SignUp from "./sign-up/SignUp";
 
 class App extends Component {
     constructor(props) {
@@ -19,11 +20,12 @@ class App extends Component {
         return (
             <div className="App">
                 <ToastContainer/>
-                <NavBar/>
+                <NavBar loggedInUser="1"/>
 
                 <Route path='/' exact render={(props) => <Home {...props} loggedInUser={"1"}/>} />
                 <Route path='/users/:id' render={(props) => <Profile {...props} loggedInUser={"1"}/>} />
                 <Route path='/projects/:id' render={(props) => <Project {...props} loggedInUser={"1"}/>} />
+                <Route path='/sign-up' exact render={(props) => <SignUp {...props} loggedInUser={"1"}/>} />
 
                 <Footer/>
             </div>
