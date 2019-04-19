@@ -36,7 +36,8 @@ function SignUpForm(props) {
                 </div>
                 <div className="text-center">
                     عضو جاب‌اونجا هستید؟
-                    <Link to="#">
+                    &nbsp;
+                    <Link to="/login">
                         ورود
                     </Link>
                 </div>
