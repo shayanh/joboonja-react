@@ -31,7 +31,7 @@ function Skill(props) {
 
 function SkillsList(props) {
     const skills = props.skills || [];
-    console.log(skills);
+    // console.log(skills);
     return (
         <div className="skills">
             {skills.map((skill, i) => (

@@ -1,13 +1,16 @@
 import React from "react";
+import axios from 'axios';
 import BlueBar from "../common/BlueBar";
 import './Home.css';
+import {toast} from 'react-toastify';
+import {Link} from "react-router-dom";
 
 function JobOonjaTitle(props) {
     return (
         <div>
             <div id="joboonja-title" className="text-right">
                 <b>
-                جاب‌اونجا خوب است!
+                    جاب‌اونجا خوب است!
                 </b>
             </div>
             <div id="joboonja-desc" className="text-right">
@@ -29,14 +32,133 @@ function JoboonjaSearch(props) {
 
 function UserSearch(props) {
     return (
-        <input type="text" placeholder="جستجو نام کاربر"/>
+        <input type="text" placeholder="جستجو نام کاربر" className="bg-light shadow-sm user-search"/>
     );
+}
+
+function UserCard(props) {
+    return (
+        <div className="home-user-card">
+            <img className="home-user-image" src={props.user.profilePictureURL} alt="user"/>
+            <div>
+                <Link to={'/users/' + props.user.id} className="home-user-name text-right">
+                    {props.user.firstName + " " + props.user.lastName}
+                </Link>
+                <div className="home-user-job text-right">
+                    {props.user.jobTitle}
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function UsersList(props) {
+    const users = props.users || [];
+    return (
+        <div>
+            {users.map((user, i) => (
+                <UserCard key={i} user={user}/>
+            ))}
+        </div>
+    );
+}
+
+function SmallSkill(props) {
+    return (
+        <div className="home-project-skill border">
+            {props.skill.name.name}
+        </div>
+    );
+}
+
+function SmallSkillsList(props) {
+    const skills = props.skills || [];
+    return (
+        <div className="home-project-skills text-right">
+            مهارت‌ها:
+            {skills.map((skill, i) => (
+                <SmallSkill key={i} skill={skill}/>
+            ))}
+        </div>
+    )
+}
+
+function ProjectCard(props) {
+    const project = props.project;
+    return (
+        <div className="home-project-card">
+            <img className="home-project-img border" src={project.imageUrl} alt="project" />
+            <div>
+                <div className="home-project-firstrow">
+                    <Link to={'/projects/' + project.id} className="home-project-title text-right">
+                        {project.title}
+                    </Link>
+                    <div className="home-project-time-remaining text-center">
+                        {/*// TODO*/}
+                        زمان باقیمانده: ۱۷:۲۵
+                    </div>
+                </div>
+                <div className="home-project-desc text-right">
+                    {project.description}
+                </div>
+                <div className="home-project-budget text-right">
+                    بودجه:
+                    &nbsp;
+                    {project.budget}
+                    &nbsp;
+                    تومان
+                </div>
+                <SmallSkillsList skills={project.skills}/>
+            </div>
+        </div>
+    );
+}
+
+function ProjectsList(props) {
+    const projects = props.projects || [];
+    return (
+        <div>
+            {projects.map((project, i) => (
+                <ProjectCard key={i} project={project}/>
+            ))}
+        </div>
+    )
 }
 
 class Home extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            users: [],
+            projects: [],
+            hasError: false,
+        }
+    }
+
+    componentDidMount() {
+        axios.get("http://localhost:8080/users").then(res => {
+            const users = res.data;
+            this.setState({
+                users: users,
+            });
+            console.log(users);
+        }).catch(err => {
+            this.setState({
+                hasError: true,
+            });
+            toast.error(err.message);
+        });
+        axios.get("http://localhost:8080/projects").then(res => {
+            const projects = res.data;
+            this.setState({
+                projects: projects,
+            })
+        }).catch(err => {
+            this.setState({
+                hasError: true,
+            });
+            toast.error(err.message);
+        });
     }
 
     render() {
@@ -47,28 +169,30 @@ class Home extends React.Component {
                     <div className="container">
                         <div className="row">
                             <div className="col-sm-12">
-                        <div className="home-page-top">
-                            <div className="row">
-                                <div className="col-sm-12">
-                                    <JobOonjaTitle/>
+                                <div className="home-page-top">
+                                    <div className="row">
+                                        <div className="col-sm-12">
+                                            <JobOonjaTitle/>
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className="col-sm-3"/>
+                                        <div className="col-6">
+                                            <JoboonjaSearch/>
+                                        </div>
+                                        <div className="col-sm-3"/>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="row">
-                                <div className="col-sm-3"/>
-                                <div className="col-6">
-                                    <JoboonjaSearch/>
-                                </div>
-                                <div className="col-sm-3"/>
-                            </div>
-                        </div>
-                        </div>
                         </div>
                         <div className="home-page-content">
                             <div className="row">
                                 <div className="col-sm-3">
                                     <UserSearch/>
+                                    <UsersList users={this.state.users}/>
                                 </div>
                                 <div className="col-sm-9">
+                                    <ProjectsList projects={this.state.projects}/>
                                 </div>
                             </div>
                         </div>
@@ -76,7 +200,17 @@ class Home extends React.Component {
                 </div>
             </div>
         );
-        return defaultHTML;
+
+        if (this.state.hasError) {
+            return (
+                <div>
+                    <BlueBar/>
+                    <div className="container-fluid" id="main"/>
+                </div>
+            );
+        } else {
+            return defaultHTML;
+        }
     }
 }
 
