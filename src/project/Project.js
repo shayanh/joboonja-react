@@ -4,6 +4,7 @@ import {toast} from 'react-toastify';
 import BlueBar from "../common/BlueBar";
 import "./Project.css";
 import SkillsList from "../common/SkillsList";
+import getRemainingTime from "../common/utils";
 
 function ProjectDetails(props) {
     let deadline;
@@ -20,6 +21,10 @@ function ProjectDetails(props) {
                 <span className="flaticon-deadline"/>
                 <span className="icon-text">
                     زمان باقی‌مانده:
+                    &nbsp;
+                    <span className="my-not-bold">
+                    {getRemainingTime(props.duration)}
+                    </span>
                 </span>
             </div>
         );
@@ -30,6 +35,8 @@ function ProjectDetails(props) {
             <div className="winner">
                 <span className="flaticon-check-mark"/>
                 <span className="icon-text text-center">
+                    برنده:
+                    &nbsp;
                     {props.data.winner}
                 </span>
             </div>
@@ -49,7 +56,9 @@ function ProjectDetails(props) {
                     <span className="flaticon-money-bag"/>
                     <span className="icon-text">
                         بودجه:
+                        &nbsp;
                         {props.data.budget}
+                        &nbsp;
                         تومان
                     </span>
                 </div>

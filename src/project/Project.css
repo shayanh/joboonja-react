@@ -149,3 +149,7 @@
     display: inline-block;
     margin-right: 10px;
 }
+
+.my-not-bold {
+    font-weight: normal;
+}
