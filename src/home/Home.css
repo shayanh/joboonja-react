@@ -1,0 +1,20 @@
+#main-home {
+    background-color: #f6f6f6;
+    min-height: calc(100vh - 14rem - 4rem);
+    padding-bottom: 25px;
+}
+
+#joboonja-title {
+    margin-top: -150px;
+    position: relative;
+    color: #00858d;
+    /*font-size: 40px;*/
+}
+
+#joboonja-desc {
+    position: relative;
+}
+
+#searchDiv {
+    position: relative;
+}
