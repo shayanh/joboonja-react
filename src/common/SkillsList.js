@@ -22,13 +22,15 @@ function Button(props) {
 
 function Skill(props) {
     let cssClass = props.cssClass;
+    let onClickFn = props.onClickFn;
     if (props.skill.isEndorsed) {
-        cssClass = cssClass + " endorsed";
+        cssClass = "endorsed";
+        onClickFn = (event) => (event.preventDefault());
     }
    return (
         <div className="skill-individual rounded">
             <span className="skill-text text-center">{props.skill.name.name}</span>
-            <Button skill={props.skill} cssClass={cssClass} onClickFn={props.onClickFn} disabled={props.disabled}/>
+            <Button skill={props.skill} cssClass={cssClass} onClickFn={onClickFn} disabled={props.disabled}/>
         </div>
    );
 }

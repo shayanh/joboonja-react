@@ -184,7 +184,7 @@ class Home extends React.Component {
             this.setState({
                 users: users,
             });
-            console.log(users);
+            // console.log(users);
         }).catch(err => {
             this.setState({
                 hasError: true,
