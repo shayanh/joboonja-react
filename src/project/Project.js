@@ -193,7 +193,7 @@ class Project extends React.Component {
             this.setState({
                 projectData: projectData,
             });
-            const interval = setInterval(this.updateDuration, 1000);
+            setInterval(this.updateDuration, 1000);
         }).catch(err => {
             this.setState({
                 hasError: true,

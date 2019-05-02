@@ -39,17 +39,19 @@ function UserSearch(props) {
 
 function UserCard(props) {
     return (
-        <div className="home-user-card">
-            <img className="home-user-image" src={props.user.profilePictureURL} alt="user"/>
-            <div>
-                <Link to={'/users/' + props.user.id} className="home-user-name text-right">
-                    {props.user.firstName + " " + props.user.lastName}
-                </Link>
-                <div className="home-user-job text-right">
-                    {props.user.jobTitle}
+        <Link to={'/users/' + props.user.id} style={{ textDecoration: 'none' }}>
+            <div className="home-user-card">
+                <img className="home-user-image" src={props.user.profilePictureURL} alt="user"/>
+                <div>
+                    <div className="home-user-name text-right">
+                        {props.user.firstName + " " + props.user.lastName}
+                    </div>
+                    <div className="home-user-job text-right">
+                        {props.user.jobTitle}
+                    </div>
                 </div>
             </div>
-        </div>
+        </Link>
     );
 }
 
@@ -100,7 +102,7 @@ class ProjectCard extends React.Component{
     }
 
     componentDidMount() {
-        const interval = setInterval(this.updateDuration, 1000);
+        setInterval(this.updateDuration, 1000);
     }
 
     render() {
@@ -127,28 +129,30 @@ class ProjectCard extends React.Component{
         }
 
         return (
-            <div className={"home-project-card " + projectClass}>
-                <img className="home-project-img border" src={project.imageUrl} alt="project"/>
-                <div>
-                    <div className="home-project-firstrow">
-                        <Link to={'/projects/' + project.id} className="home-project-title text-right">
-                            {project.title}
-                        </Link>
-                        {timeBadge}
+            <Link to={'/projects/' + project.id} style={{ textDecoration: 'none' }}>
+                <div className={"home-project-card " + projectClass}>
+                    <img className="home-project-img border" src={project.imageUrl} alt="project"/>
+                    <div>
+                        <div className="home-project-firstrow">
+                            <div className="home-project-title text-right">
+                                {project.title}
+                            </div>
+                            {timeBadge}
+                        </div>
+                        <div className="home-project-desc text-right">
+                            {project.description}
+                        </div>
+                        <div className="home-project-budget text-right">
+                            بودجه:
+                            &nbsp;
+                            {project.budget}
+                            &nbsp;
+                            تومان
+                        </div>
+                        <SmallSkillsList skills={project.skills}/>
                     </div>
-                    <div className="home-project-desc text-right">
-                        {project.description}
-                    </div>
-                    <div className="home-project-budget text-right">
-                        بودجه:
-                        &nbsp;
-                        {project.budget}
-                        &nbsp;
-                        تومان
-                    </div>
-                    <SmallSkillsList skills={project.skills}/>
                 </div>
-            </div>
+            </Link>
         );
     }
 }

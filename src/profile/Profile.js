@@ -152,7 +152,7 @@ class Profile extends React.Component {
         })
     }
 
-    componentDidMount() {
+    getData() {
         const userID = this.props.match.params.id;
         axios.get('http://localhost:8080/users/' + userID).then(res => {
             const profileData = res.data;
@@ -166,6 +166,16 @@ class Profile extends React.Component {
             });
             toast.error(err.message);
         })
+    }
+
+    componentDidMount() {
+        this.getData();
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps.match.params.id !== this.props.match.id) {
+            this.getData();
+        }
     }
 
     render() {
