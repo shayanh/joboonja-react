@@ -22,19 +22,54 @@ function JobOonjaTitle(props) {
     );
 }
 
-function JoboonjaSearch(props) {
-    return (
-        <div id="joboonja-search" className="search-bar">
-            <input type="text" className="search-input" placeholder="جستجو در جاب‌اونجا"/>
-            <button className="search-button">جستجو</button>
-        </div>
-    );
+class JoboonjaSearch extends React.Component{
+    constructor(props) {
+        super(props);
+        this.state = ({
+            value: '',
+        });
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleChange(event) {
+        this.setState({
+            value: event.target.value,
+        })
+    }
+
+    handleSubmit(event) {
+        // console.log(this.state.value);
+        this.props.onSubmit(this.state.value);
+        event.preventDefault();
+    }
+
+    render() {
+        return (
+            <div id="joboonja-search" className="search-bar">
+                <input onChange={this.handleChange} type="text" className="search-input" placeholder="جستجو در جاب‌اونجا"/>
+                <button onClick={this.handleSubmit} type="sumbit" className="search-button">جستجو</button>
+            </div>
+        );
+    }
 }
 
-function UserSearch(props) {
-    return (
-        <input type="text" placeholder="جستجو نام کاربر" className="bg-light shadow-sm user-search"/>
-    );
+class UserSearch extends React.Component{
+    constructor(props) {
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(event) {
+        // console.log(event.target.value);
+        this.props.onUpdate(event.target.value);
+    }
+
+    render() {
+        return (
+            <input onChange={this.handleChange} type="text" placeholder="جستجو نام کاربر" className="bg-light shadow-sm user-search"/>
+        );
+    }
 }
 
 function UserCard(props) {
@@ -174,12 +209,34 @@ class Home extends React.Component {
         this.state = {
             users: [],
             projects: [],
+            start: 0,
+            offset: 10,
+            projectSearchQuery: '',
+            projectsEnded: false,
             hasError: false,
-        }
+        };
+        this.getProjects = this.getProjects.bind(this);
+        this.getUsers = this.getUsers.bind(this);
+        this.onProjectSearchClick = this.onProjectSearchClick.bind(this);
     }
 
-    componentDidMount() {
-        axios.get("http://localhost:8080/users").then(res => {
+    onProjectSearchClick(query) {
+        this.setState({
+            start: 0,
+            projectsEnded: false,
+            projects: [],
+            projectSearchQuery: query,
+        }, () => {
+            this.getProjects();
+        });
+    }
+
+    getUsers(query) {
+        let url = "http://localhost:8080/users";
+        if (query != null) {
+            url = url + "?q=" + encodeURIComponent(query);
+        }
+        axios.get(url).then(res => {
             const users = res.data;
             this.setState({
                 users: users,
@@ -191,10 +248,23 @@ class Home extends React.Component {
             });
             toast.error(err.message);
         });
-        axios.get("http://localhost:8080/projects").then(res => {
-            const projects = res.data;
+    }
+
+    getProjects() {
+        let url = "http://localhost:8080/projects?start=" + this.state.start + "&offset=" + this.state.offset;
+        if (this.state.projectSearchQuery !== '') {
+            url = url + "&q=" + encodeURIComponent(this.state.projectSearchQuery);
+        }
+        // console.log(url);
+        axios.get(url).then(res => {
+            const newProjects = res.data;
+            // console.log(newProjects);
+            const projects = this.state.projects.concat(newProjects);
+            const projectsEnded = newProjects.length === 0;
             this.setState({
                 projects: projects,
+                start: this.state.start + this.state.offset,
+                projectsEnded: projectsEnded,
             })
         }).catch(err => {
             this.setState({
@@ -202,6 +272,11 @@ class Home extends React.Component {
             });
             toast.error(err.message);
         });
+    }
+
+    componentDidMount() {
+        this.getUsers();
+        this.getProjects();
     }
 
     render() {
@@ -221,7 +296,7 @@ class Home extends React.Component {
                                     <div className="row">
                                         <div className="col-sm-3"/>
                                         <div className="col-6">
-                                            <JoboonjaSearch/>
+                                            <JoboonjaSearch onSubmit={this.onProjectSearchClick}/>
                                         </div>
                                         <div className="col-sm-3"/>
                                     </div>
@@ -231,7 +306,7 @@ class Home extends React.Component {
                         <div className="home-page-content">
                             <div className="row">
                                 <div className="col-sm-3">
-                                    <UserSearch/>
+                                    <UserSearch onUpdate={this.getUsers}/>
                                     <UsersList users={this.state.users}/>
                                 </div>
                                 <div className="col-sm-9">
@@ -239,6 +314,14 @@ class Home extends React.Component {
                                 </div>
                             </div>
                         </div>
+                        {!this.state.projectsEnded &&
+                        <div className="row text-center">
+                            <div className="col-sm-3"/>
+                            <div className="col-sm-9">
+                                <button onClick={this.getProjects} type="button" className="load-more-button">ادامه</button>
+                            </div>
+                        </div>
+                        }
                     </div>
                 </div>
             </div>
