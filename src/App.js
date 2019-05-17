@@ -12,13 +12,29 @@ import Login from "./login/Login";
 class App extends Component {
     constructor(props) {
         super(props);
+
+        let check = true;
         if (typeof(Storage) !== "undefined" && localStorage.getItem("jwtToken") !== "null") {
             const token = localStorage.getItem("jwtToken");
-            this.state = {
-                jwtToken: token,
-                loggedIn: true,
-            };
-        } else {
+            try {
+                const jwtDecode = require("jwt-decode");
+                const decoded = jwtDecode(token);
+                if (decoded.exp < Date.now() / 1000) {
+                    check = false;
+                }
+            } catch (e) {
+                check = false;
+            }
+
+            if (check) {
+                this.state = {
+                    jwtToken: token,
+                    loggedIn: true,
+                };
+            }
+        }
+        if (!check) {
+            localStorage.setItem("jwtToken", "null");
             this.state = {
                 jwtToken: "",
                 loggedIn: false,
