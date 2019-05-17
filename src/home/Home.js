@@ -3,7 +3,7 @@ import axios from 'axios';
 import BlueBar from "../common/BlueBar";
 import './Home.css';
 import {toast} from 'react-toastify';
-import {Link} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 import {getRemainingTime} from "../common/utils";
 
 function JobOonjaTitle(props) {
@@ -206,6 +206,7 @@ function ProjectsList(props) {
 class Home extends React.Component {
     constructor(props) {
         super(props);
+        const jwtDecode = require("jwt-decode");
         this.state = {
             users: [],
             projects: [],
@@ -214,6 +215,7 @@ class Home extends React.Component {
             projectSearchQuery: '',
             projectsEnded: false,
             hasError: false,
+            loggedInUser: jwtDecode(props.jwtToken)
         };
         this.getProjects = this.getProjects.bind(this);
         this.getUsers = this.getUsers.bind(this);
@@ -236,7 +238,7 @@ class Home extends React.Component {
         if (query != null) {
             url = url + "?q=" + encodeURIComponent(query);
         }
-        axios.get(url).then(res => {
+        axios.get(url, {headers: {'Authorization': 'Bearer ' + this.props.jwtToken}}).then(res => {
             const users = res.data;
             this.setState({
                 users: users,
@@ -255,8 +257,8 @@ class Home extends React.Component {
         if (this.state.projectSearchQuery !== '') {
             url = url + "&q=" + encodeURIComponent(this.state.projectSearchQuery);
         }
-        // console.log(url);
-        axios.get(url).then(res => {
+        console.log(url);
+        axios.get(url, {headers: {'Authorization': 'Bearer ' + this.props.jwtToken}}).then(res => {
             const newProjects = res.data;
             // console.log(newProjects);
             const projects = this.state.projects.concat(newProjects);
@@ -327,7 +329,9 @@ class Home extends React.Component {
             </div>
         );
 
-        if (this.state.hasError) {
+        if (!this.props.loggedIn) {
+            return <Redirect to='/login'/>;
+        } else if (this.state.hasError) {
             return (
                 <div>
                     <BlueBar/>

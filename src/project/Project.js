@@ -5,6 +5,7 @@ import BlueBar from "../common/BlueBar";
 import "./Project.css";
 import SkillsList from "../common/SkillsList";
 import {getRemainingTimeVerbose} from "../common/utils";
+import {Redirect} from "react-router-dom";
 
 function ProjectDetails(props) {
     let deadline;
@@ -97,7 +98,8 @@ class AddBid extends React.Component {
         if (isNaN(bidRequest.bidAmount)) {
             toast.error("Invalid input");
         } else {
-            axios.post("http://localhost:8080/projects/" + this.props.project + "/bid", bidRequest).then(() => {
+            axios.post("http://localhost:8080/projects/" + this.props.project + "/bid", bidRequest,
+                {headers: {'Authorization': 'Bearer ' + this.props.jwtToken}}).then(() => {
                 toast.success("Bid added");
                 this.props.updater();
             }).catch(err => {
@@ -155,7 +157,7 @@ function BidDetails(props) {
         );
     } else {
         content = (
-            <AddBid project={props.projectID} user={props.loggedInUser} updater={props.updater}/>
+            <AddBid project={props.projectID} user={props.loggedInUser} updater={props.updater} jwtToken={props.jwtToken}/>
         )
     }
 
@@ -169,11 +171,13 @@ function BidDetails(props) {
 class Project extends React.Component {
     constructor(props) {
         super(props);
+        const jwtDecode = require("jwt-decode");
         this.state = {
             projectData: {},
             hasError: false,
             bidBefore: false,
             duration: new Date(0),
+            loggedInUser: jwtDecode(props.jwtToken).userId
         };
         this.updateBidDetails = this.updateBidDetails.bind(this);
         this.updateDuration = this.updateDuration.bind(this);
@@ -187,7 +191,8 @@ class Project extends React.Component {
 
     componentDidMount() {
         const projectID = this.props.match.params.id;
-        axios.get("http://localhost:8080/projects/" + projectID).then(res => {
+        axios.get("http://localhost:8080/projects/" + projectID,
+            {headers: {'Authorization': 'Bearer ' + this.props.jwtToken}}).then(res => {
             const projectData = res.data;
             // console.log(projectData);
             this.setState({
@@ -205,8 +210,8 @@ class Project extends React.Component {
 
     updateBidDetails() {
         const projectID = this.props.match.params.id;
-        // console.log("update bid details");
-        axios.get("http://localhost:8080/projects/" + projectID + "/bid").then(() => {
+        axios.get("http://localhost:8080/projects/" + projectID + "/bid",
+            {headers: {'Authorization': 'Bearer ' + this.props.jwtToken}}).then(() => {
             this.setState({
                 bidBefore: true,
             })
@@ -215,7 +220,7 @@ class Project extends React.Component {
 
     render() {
         const projectID = this.props.match.params.id;
-        const loggedInUser = this.props.loggedInUser;
+        const loggedInUser = this.state.loggedInUser;
         const finished = Date.now() > this.state.projectData.deadline;
 
         const defaultHTML = (
@@ -242,7 +247,8 @@ class Project extends React.Component {
                             <div className="row">
                                 <div className="col-sm-12">
                                     <BidDetails bidBefore={this.state.bidBefore} finished={finished}
-                                                projectID={projectID} loggedInUser={loggedInUser} updater={this.updateBidDetails}/>
+                                                projectID={projectID} loggedInUser={loggedInUser}
+                                                updater={this.updateBidDetails} jwtToken={this.props.jwtToken}/>
                                 </div>
                             </div>
                         </div>
@@ -251,7 +257,9 @@ class Project extends React.Component {
             </div>
         );
 
-        if (this.state.hasError) {
+        if (!this.props.loggedIn) {
+            return <Redirect to='/login'/>;
+        } else if (this.state.hasError) {
             return (
                 <div>
                     <BlueBar/>

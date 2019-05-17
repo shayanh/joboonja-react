@@ -5,6 +5,7 @@ import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SkillsList from "../common/SkillsList";
 import BlueBar from "../common/BlueBar";
+import {Redirect} from "react-router-dom";
 
 function ProfilePicture(props) {
     return (
@@ -59,7 +60,8 @@ class AddNewSkill extends React.Component {
     }
 
     componentDidMount() {
-        axios.get('http://localhost:8080/skill-names').then(res => {
+        axios.get('http://localhost:8080/skill-names',
+            {headers: {'Authorization': 'Bearer ' + this.props.jwtToken}}).then(res => {
             const skills = res.data;
             this.setState({
                 skills: skills,
@@ -80,8 +82,8 @@ class AddNewSkill extends React.Component {
         const newSkill = {
             skillName: this.state.selectedSkill
         };
-        // console.log(this.props.user);
-        axios.post("http://localhost:8080/users/" + this.props.user + "/skills", newSkill).then(() => {
+        axios.post("http://localhost:8080/users/" + this.props.user + "/skills", newSkill,
+            {headers: {'Authorization': 'Bearer ' + this.props.jwtToken}}).then(() => {
             toast.success("Successfully added");
             this.props.updater();
         }).catch(err => {
@@ -110,10 +112,11 @@ class AddNewSkill extends React.Component {
 class Profile extends React.Component {
     constructor(props) {
         super(props);
-        // console.log(props);
+        const jwtDecode = require("jwt-decode");
         this.state = {
             profileData: {},
             hasError: false,
+            loggedInUser: jwtDecode(props.jwtToken).userId
         };
         this.deleteSkill = this.deleteSkill.bind(this);
         this.updateSkills = this.updateSkills.bind(this);
@@ -123,7 +126,8 @@ class Profile extends React.Component {
     deleteSkill(event) {
         const userID = this.props.match.params.id;
         const skillName = event.target.value;
-        axios.delete("http://localhost:8080/users/" + userID + "/skills?skill-name=" + encodeURIComponent(skillName)).then(() => {
+        axios.delete("http://localhost:8080/users/" + userID + "/skills?skill-name=" + encodeURIComponent(skillName),
+            {headers: {'Authorization': 'Bearer ' + this.props.jwtToken}}).then(() => {
             toast.info(skillName + " skill deleted");
             this.updateSkills()
         }).catch(err => {
@@ -134,7 +138,8 @@ class Profile extends React.Component {
     endorseSkill(event) {
         const userID = this.props.match.params.id;
         const skillName = event.target.value;
-        axios.post("http://localhost:8080/users/" + userID + "/skills/endorsements?skill-name=" + encodeURIComponent(skillName)).then(() => {
+        axios.post("http://localhost:8080/users/" + userID + "/skills/endorsements?skill-name=" + encodeURIComponent(skillName),
+            {}, {headers: {'Authorization': 'Bearer ' + this.props.jwtToken}}).then(() => {
             this.updateSkills();
         }).catch(err => {
             toast.error("Cannot endorse skill:" + err.message)
@@ -144,7 +149,8 @@ class Profile extends React.Component {
     updateSkills() {
         const userID = this.props.match.params.id;
         const profileData = Object.assign({}, this.state.profileData);
-        axios.get('http://localhost:8080/users/' + userID + "/skills").then(res => {
+        axios.get('http://localhost:8080/users/' + userID + "/skills",
+            {headers: {'Authorization': 'Bearer ' + this.props.jwtToken}}).then(res => {
             profileData.skills = res.data;
             this.setState({
                 profileData: profileData,
@@ -154,7 +160,8 @@ class Profile extends React.Component {
 
     getData() {
         const userID = this.props.match.params.id;
-        axios.get('http://localhost:8080/users/' + userID).then(res => {
+        axios.get('http://localhost:8080/users/' + userID,
+            {headers: {'Authorization': 'Bearer ' + this.props.jwtToken}}).then(res => {
             const profileData = res.data;
             // console.log(profileData);
             this.setState({
@@ -180,15 +187,15 @@ class Profile extends React.Component {
 
     render() {
         const userID = this.props.match.params.id;
-        const loggedInUser = this.props.loggedInUser;
-        const selfProfile = userID === loggedInUser;
+        const loggedInUser = this.state.loggedInUser;
+        const selfProfile = Number(userID) === Number(loggedInUser);
 
         let addNewSkill;
         if (selfProfile) {
             addNewSkill = (
                 <div className="row">
                     <div className="col-md-8">
-                        <AddNewSkill user={userID} updater={this.updateSkills}/>
+                        <AddNewSkill user={userID} updater={this.updateSkills} jwtToken={this.props.jwtToken}/>
                     </div>
                 </div>
             )
@@ -223,7 +230,9 @@ class Profile extends React.Component {
             </div>
         );
 
-        if (this.state.hasError) {
+        if (!this.props.loggedIn) {
+            return <Redirect to='/login'/>;
+        } else if (this.state.hasError) {
             return (
                 <div>
                     <BlueBar/>
