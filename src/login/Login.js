@@ -3,13 +3,15 @@ import axios from 'axios';
 import SlideShow from "../common/SlideShow";
 import './Login.css';
 import {Link, Redirect} from "react-router-dom";
+import {toast} from 'react-toastify';
 
 class LoginForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             username: "",
-            password: ""
+            password: "",
+            error: ""
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -35,16 +37,22 @@ class LoginForm extends React.Component {
             axios.post("http://localhost:8080/users/login", data).then(res => {
                 const token = res.data.token;
                 this.props.onLogin(token);
+            }).catch(err => {
+                toast.error(err.message);
             })
         }
     }
 
     validate() {
-        let result = true;
         if (this.state.username.length === 0 || this.state.password.length === 0) {
-            result = false;
+            this.setState({
+                error: "Please fill all inputs"
+            }, () => {
+                toast.error(this.state.error);
+            });
+            return false;
         }
-        return result;
+        return true;
     }
 
     render() {
@@ -54,11 +62,11 @@ class LoginForm extends React.Component {
                     <h2>ورود</h2>
                     <div className="form-group">
                         <input type="text" className="form-control" name="username" placeholder="نام کاربری"
-                               required="required" onChange={this.handleChange}/>
+                               required onChange={this.handleChange}/>
                     </div>
                     <div className="form-group">
                         <input type="password" className="form-control" name="password" placeholder="رمزعبور"
-                               required="required" onChange={this.handleChange}/>
+                               required onChange={this.handleChange}/>
                     </div>
                     <div className="form-group">
                         <button type="submit" className="btn btn-success btn-lg btn-block" onClick={this.handleSubmit}>

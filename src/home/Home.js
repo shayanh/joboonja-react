@@ -207,6 +207,10 @@ class Home extends React.Component {
     constructor(props) {
         super(props);
         const jwtDecode = require("jwt-decode");
+        let loggedInUser = '';
+        if (props.loggedIn) {
+            loggedInUser = jwtDecode(props.jwtToken);
+        }
         this.state = {
             users: [],
             projects: [],
@@ -215,7 +219,7 @@ class Home extends React.Component {
             projectSearchQuery: '',
             projectsEnded: false,
             hasError: false,
-            loggedInUser: jwtDecode(props.jwtToken)
+            loggedInUser: loggedInUser
         };
         this.getProjects = this.getProjects.bind(this);
         this.getUsers = this.getUsers.bind(this);

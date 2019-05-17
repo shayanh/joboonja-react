@@ -113,10 +113,14 @@ class Profile extends React.Component {
     constructor(props) {
         super(props);
         const jwtDecode = require("jwt-decode");
+        let loggedInUser = '';
+        if (props.loggedIn) {
+            loggedInUser = jwtDecode(props.jwtToken);
+        }
         this.state = {
             profileData: {},
             hasError: false,
-            loggedInUser: jwtDecode(props.jwtToken).userId
+            loggedInUser: loggedInUser
         };
         this.deleteSkill = this.deleteSkill.bind(this);
         this.updateSkills = this.updateSkills.bind(this);

@@ -3,6 +3,7 @@ import {Link, Redirect} from "react-router-dom";
 import './SignUp.css';
 import SlideShow from "../common/SlideShow";
 import axios from 'axios';
+import {toast} from 'react-toastify';
 
 class SignUpForm extends React.Component {
     constructor(props) {
@@ -14,7 +15,7 @@ class SignUpForm extends React.Component {
             password: "",
             confirmPassword: "",
             agreed: false,
-            errors: {}
+            error: ""
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -43,25 +44,39 @@ class SignUpForm extends React.Component {
             axios.post("http://localhost:8080/users", data).then(res => {
                 const token = res.data.token;
                 this.props.onSignUp(token);
-            });
+            }).catch(err => {
+                toast.error(err.message);
+            })
         }
     }
 
     validate() {
-        let result = true;
-        if (this.state.firstName.length === 0 || this.state.lastName.length === 0) {
-            result = false;
-        }
-        if (this.state.username.length === 0 || this.state.password.length === 0 || this.state.confirmPassword.length === 0) {
-            result = false;
+        if (this.state.firstName.length === 0 || this.state.lastName.length === 0 || this.state.username.length === 0
+            || this.state.password.length === 0 || this.state.confirmPassword.length === 0) {
+            this.setState({
+                error: "Please fill all inputs"
+            }, () => {
+                toast.error(this.state.error);
+            });
+            return false;
         }
         if (!this.state.agreed) {
-            result = false;
+            this.setState({
+                error: "Please check the checkbox"
+            }, () => {
+                toast.error(this.state.error);
+            });
+            return false;
         }
         if (this.state.password !== this.state.confirmPassword) {
-            result = false;
+            this.setState({
+                error: "Passwords mismatch"
+            }, () => {
+                toast.error(this.state.error);
+            });
+            return false;
         }
-        return result;
+        return true;
     }
 
     render() {

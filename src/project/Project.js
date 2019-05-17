@@ -172,12 +172,16 @@ class Project extends React.Component {
     constructor(props) {
         super(props);
         const jwtDecode = require("jwt-decode");
+        let loggedInUser = '';
+        if (props.loggedIn) {
+            loggedInUser = jwtDecode(props.jwtToken);
+        }
         this.state = {
             projectData: {},
             hasError: false,
             bidBefore: false,
             duration: new Date(0),
-            loggedInUser: jwtDecode(props.jwtToken).userId
+            loggedInUser: loggedInUser
         };
         this.updateBidDetails = this.updateBidDetails.bind(this);
         this.updateDuration = this.updateDuration.bind(this);
