@@ -40,13 +40,13 @@ class App extends Component {
                 loggedIn: false,
             };
         }
-        console.log("cons");
+        // console.log("cons");
         this.authenticate = this.authenticate.bind(this);
         this.logout = this.logout.bind(this);
     }
 
     authenticate(token) {
-        console.log("authenticate");
+        // console.log("authenticate");
         localStorage.setItem("jwtToken", token);
         this.setState({
             jwtToken: token,
@@ -63,8 +63,8 @@ class App extends Component {
     }
 
     render() {
-        console.log(this.state.jwtToken);
-        console.log(this.state.loggedIn);
+        // console.log(this.state.jwtToken);
+        // console.log(this.state.loggedIn);
         return (
             <div className="App">
                 <ToastContainer/>

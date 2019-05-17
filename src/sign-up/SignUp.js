@@ -32,7 +32,7 @@ class SignUpForm extends React.Component {
 
     handleSubmit(event) {
         event.preventDefault();
-        console.log(this.state);
+        // console.log(this.state);
         const isValid = this.validate();
         if (isValid) {
             const data = {

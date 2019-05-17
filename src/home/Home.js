@@ -261,7 +261,7 @@ class Home extends React.Component {
         if (this.state.projectSearchQuery !== '') {
             url = url + "&q=" + encodeURIComponent(this.state.projectSearchQuery);
         }
-        console.log(url);
+        // console.log(url);
         axios.get(url, {headers: {'Authorization': 'Bearer ' + this.props.jwtToken}}).then(res => {
             const newProjects = res.data;
             // console.log(newProjects);

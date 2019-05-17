@@ -9,7 +9,7 @@ function NavBar(props) {
     }
 
     const jwtDecode = require("jwt-decode");
-    console.log(props.jwtToken);
+    // console.log(props.jwtToken);
     const loggedInUser = jwtDecode(props.jwtToken).userId;
     return (
         <nav className="navbar navbar-expand-md bg-white navbar-light fixed-top">

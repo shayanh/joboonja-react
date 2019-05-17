@@ -38,7 +38,9 @@ function ProjectDetails(props) {
                 <span className="icon-text text-center">
                     برنده:
                     &nbsp;
-                    {props.data.winner}
+                    {props.data.winner.firstName}
+                    &nbsp;
+                    {props.data.winner.lastName}
                 </span>
             </div>
         );
