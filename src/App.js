@@ -12,7 +12,6 @@ import Login from "./login/Login";
 class App extends Component {
     constructor(props) {
         super(props);
-
         let check = true;
         if (typeof(Storage) !== "undefined" && localStorage.getItem("jwtToken") !== "null") {
             const token = localStorage.getItem("jwtToken");
@@ -32,15 +31,15 @@ class App extends Component {
                     loggedIn: true,
                 };
             }
+        } else {
+            check = false;
         }
         if (!check) {
-            localStorage.setItem("jwtToken", "null");
             this.state = {
                 jwtToken: "",
                 loggedIn: false,
             };
         }
-        // console.log("cons");
         this.authenticate = this.authenticate.bind(this);
         this.logout = this.logout.bind(this);
     }

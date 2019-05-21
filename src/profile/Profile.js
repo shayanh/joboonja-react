@@ -115,7 +115,7 @@ class Profile extends React.Component {
         const jwtDecode = require("jwt-decode");
         let loggedInUser = '';
         if (props.loggedIn) {
-            loggedInUser = jwtDecode(props.jwtToken);
+            loggedInUser = jwtDecode(props.jwtToken).userId;
         }
         this.state = {
             profileData: {},
@@ -193,6 +193,9 @@ class Profile extends React.Component {
         const userID = this.props.match.params.id;
         const loggedInUser = this.state.loggedInUser;
         const selfProfile = Number(userID) === Number(loggedInUser);
+        // console.log(userID);
+        // console.log(loggedInUser);
+        // console.log(selfProfile);
 
         let addNewSkill;
         if (selfProfile) {
