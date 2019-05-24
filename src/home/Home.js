@@ -238,7 +238,7 @@ class Home extends React.Component {
     }
 
     getUsers(query) {
-        let url = "http://localhost:8080/users";
+        let url = process.env.REACT_APP_SERVER + "/users";
         if (query != null) {
             url = url + "?q=" + encodeURIComponent(query);
         }
@@ -257,7 +257,7 @@ class Home extends React.Component {
     }
 
     getProjects() {
-        let url = "http://localhost:8080/projects?start=" + this.state.start + "&offset=" + this.state.offset;
+        let url = process.env.REACT_APP_SERVER + "/projects?start=" + this.state.start + "&offset=" + this.state.offset;
         if (this.state.projectSearchQuery !== '') {
             url = url + "&q=" + encodeURIComponent(this.state.projectSearchQuery);
         }
@@ -281,8 +281,10 @@ class Home extends React.Component {
     }
 
     componentDidMount() {
-        this.getUsers();
-        this.getProjects();
+        if (this.props.loggedIn) {
+            this.getUsers();
+            this.getProjects();
+        }
     }
 
     render() {

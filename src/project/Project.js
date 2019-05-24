@@ -100,7 +100,7 @@ class AddBid extends React.Component {
         if (isNaN(bidRequest.bidAmount)) {
             toast.error("Invalid input");
         } else {
-            axios.post("http://localhost:8080/projects/" + this.props.project + "/bid", bidRequest,
+            axios.post(process.env.REACT_APP_SERVER + "/projects/" + this.props.project + "/bid", bidRequest,
                 {headers: {'Authorization': 'Bearer ' + this.props.jwtToken}}).then(() => {
                 toast.success("Bid added");
                 this.props.updater();
@@ -197,7 +197,7 @@ class Project extends React.Component {
 
     componentDidMount() {
         const projectID = this.props.match.params.id;
-        axios.get("http://localhost:8080/projects/" + projectID,
+        axios.get(process.env.REACT_APP_SERVER + "/projects/" + projectID,
             {headers: {'Authorization': 'Bearer ' + this.props.jwtToken}}).then(res => {
             const projectData = res.data;
             // console.log(projectData);
@@ -216,7 +216,7 @@ class Project extends React.Component {
 
     updateBidDetails() {
         const projectID = this.props.match.params.id;
-        axios.get("http://localhost:8080/projects/" + projectID + "/bid",
+        axios.get(process.env.REACT_APP_SERVER + "/projects/" + projectID + "/bid",
             {headers: {'Authorization': 'Bearer ' + this.props.jwtToken}}).then(() => {
             this.setState({
                 bidBefore: true,

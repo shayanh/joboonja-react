@@ -34,7 +34,8 @@ class LoginForm extends React.Component {
                 username: this.state.username,
                 password: this.state.password
             };
-            axios.post("http://localhost:8080/users/login", data).then(res => {
+            console.log(process.env.REACT_APP_SERVER);
+            axios.post(process.env.REACT_APP_SERVER + "/users/login", data).then(res => {
                 const token = res.data.token;
                 this.props.onLogin(token);
             }).catch(err => {

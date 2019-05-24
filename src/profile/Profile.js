@@ -60,7 +60,7 @@ class AddNewSkill extends React.Component {
     }
 
     componentDidMount() {
-        axios.get('http://localhost:8080/skill-names',
+        axios.get(process.env.REACT_APP_SERVER + '/skill-names',
             {headers: {'Authorization': 'Bearer ' + this.props.jwtToken}}).then(res => {
             const skills = res.data;
             this.setState({
@@ -82,7 +82,7 @@ class AddNewSkill extends React.Component {
         const newSkill = {
             skillName: this.state.selectedSkill
         };
-        axios.post("http://localhost:8080/users/" + this.props.user + "/skills", newSkill,
+        axios.post(process.env.REACT_APP_SERVER + "/users/" + this.props.user + "/skills", newSkill,
             {headers: {'Authorization': 'Bearer ' + this.props.jwtToken}}).then(() => {
             toast.success("Successfully added");
             this.props.updater();
@@ -130,7 +130,7 @@ class Profile extends React.Component {
     deleteSkill(event) {
         const userID = this.props.match.params.id;
         const skillName = event.target.value;
-        axios.delete("http://localhost:8080/users/" + userID + "/skills?skill-name=" + encodeURIComponent(skillName),
+        axios.delete(process.env.REACT_APP_SERVER + "/users/" + userID + "/skills?skill-name=" + encodeURIComponent(skillName),
             {headers: {'Authorization': 'Bearer ' + this.props.jwtToken}}).then(() => {
             toast.info(skillName + " skill deleted");
             this.updateSkills()
@@ -142,7 +142,7 @@ class Profile extends React.Component {
     endorseSkill(event) {
         const userID = this.props.match.params.id;
         const skillName = event.target.value;
-        axios.post("http://localhost:8080/users/" + userID + "/skills/endorsements?skill-name=" + encodeURIComponent(skillName),
+        axios.post(process.env.REACT_APP_SERVER + "/users/" + userID + "/skills/endorsements?skill-name=" + encodeURIComponent(skillName),
             {}, {headers: {'Authorization': 'Bearer ' + this.props.jwtToken}}).then(() => {
             this.updateSkills();
         }).catch(err => {
@@ -153,7 +153,7 @@ class Profile extends React.Component {
     updateSkills() {
         const userID = this.props.match.params.id;
         const profileData = Object.assign({}, this.state.profileData);
-        axios.get('http://localhost:8080/users/' + userID + "/skills",
+        axios.get(process.env.REACT_APP_SERVER + '/users/' + userID + "/skills",
             {headers: {'Authorization': 'Bearer ' + this.props.jwtToken}}).then(res => {
             profileData.skills = res.data;
             this.setState({
@@ -164,7 +164,7 @@ class Profile extends React.Component {
 
     getData() {
         const userID = this.props.match.params.id;
-        axios.get('http://localhost:8080/users/' + userID,
+        axios.get(process.env.REACT_APP_SERVER + '/users/' + userID,
             {headers: {'Authorization': 'Bearer ' + this.props.jwtToken}}).then(res => {
             const profileData = res.data;
             // console.log(profileData);

@@ -41,7 +41,7 @@ class SignUpForm extends React.Component {
                 username: this.state.username,
                 password: this.state.password
             };
-            axios.post("http://localhost:8080/users", data).then(res => {
+            axios.post(process.env.REACT_APP_SERVER + "/users", data).then(res => {
                 const token = res.data.token;
                 this.props.onSignUp(token);
             }).catch(err => {
