@@ -1,0 +1,28 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: joboonja-react
+  labels:
+    app: joboonja-react
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: joboonja-react
+  template:
+    metadata:
+      labels:
+        app: joboonja-react
+    spec:
+      containers:
+        - name: joboonja-react
+          image: quay.io/shayan_hosseiny/joboonja-react:latest
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              cpu: "100m"
+              memory: "100Mi"
+            requests:
+              cpu: "100m"
+              memory: "100Mi"
