@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.com/shayanh/joboonja-react.svg?token=DsqMBVob2QqoSMBVAzup&branch=master)](https://travis-ci.com/shayanh/joboonja-react)
+[![buddy pipeline](https://app.buddy.works/shayanhosseiny/joboonja-react/pipelines/pipeline/191232/badge.svg?token=a20226c42da7a9e2ca5f11c9c2988589635c7bfb8afc2854ada94ed4e8324b78 "buddy pipeline")](https://app.buddy.works/shayanhosseiny/joboonja-react/pipelines/pipeline/191232)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
